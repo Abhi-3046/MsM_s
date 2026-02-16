@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mobile Shop - Home</title>
+  <style>
+    :root {
+      --primary-color: : #373440;
+      --secondary-color: #6c757d;
+      --text-color: #333;
+      --background-color: #f8f9fa;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--background-color);
+      color: var(--text-color);
+    }
+
+    .navbar {
+      background-color: var(--primary-color);
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .navbar .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .navbar .logo a {
+      text-decoration: none;
+      color: white;
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .navbar ul li a {
+      color: white;
+      text-decoration: none;
+      font-size: 1rem;
+    }
+
+    .navbar ul li a:hover {
+      text-decoration: underline;
+    }
+
+    .hero {
+      position: relative;
+      height: 400px;
+      overflow: hidden;
+    }
+
+    .slideshow-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .hero-slide {
+      display: none;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      animation: fadeIn 1s;
+    }
+
+    .hero-slide.active {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+    }
+
+    .hero-slide::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
+      z-index: 1;
+    }
+
+    .hero-slide h1 {
+      position: relative;
+      z-index: 2;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .hero-slide button {
+      position: relative;
+      z-index: 2;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      background-color: var(--secondary-color);
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    .hero-slide button:hover {
+      background-color: var(--primary-color);
+    }
+
+    .slideshow-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(255, 255, 255, 0.3);
+      color: white;
+      border: none;
+      padding: 1rem;
+      cursor: pointer;
+      font-size: 1.5rem;
+      z-index: 3;
+      transition: background-color 0.3s;
+    }
+
+    .slideshow-nav:hover {
+      background-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .slideshow-nav.prev {
+      left: 0;
+    }
+
+    .slideshow-nav.next {
+      right: 0;
+    }
+
+    .slide-indicators {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 3;
+    }
+
+    .slide-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.5);
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .slide-indicator.active {
+      background-color: white;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    .featured-products {
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .featured-products h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .product-card img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 5px;
+    }
+
+    .product-card h3 {
+      margin: 0.5rem 0;
+      font-size: 1.2rem;
+    }
+
+    .product-card p {
+      color: var(--secondary-color);
+      margin-bottom: 1rem;
+    }
+
+    .product-card button {
+      padding: 0.5rem 1rem;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .product-card button:hover {
+      background-color: var(--secondary-color);
+    }
+
+    footer {
+      background-color: var(--primary-color);
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .navbar ul {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .hero-slide h1 {
+        font-size: 1.8rem;
+      }
+
+      .slideshow-nav {
+        padding: 0.5rem;
+        font-size: 1.2rem;
+      }
+
+      .product-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="logo">
+      <a href="index.html" aria-label="Home page"><img src="src/logo/dora.png" alt="Logo"
+          style="height:32px;vertical-align:middle;margin-right:8px;">
+        Dora</a>
+    </div>
+    <ul>
+      <li><a href="product.html" aria-label="Products page">Products</a></li>
+      <li><a href="cart.html" aria-label="Shopping cart">Cart</a></li>
+      <li><a href="contact.html" aria-label="Contact page">Contact</a></li>
+      <li id="authLink"><a href="loginpage.html" aria-label="Login page">Login</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <div class="slideshow-container">
+      <div class="hero-slide active" style="background-image: url('src/slide\ show/X 20 Phone.png');">
+        <h1>Discover the Latest Mobile Phones</h1>
+        <button onclick="window.location.href='#products'">Shop Now</button>
+      </div>
+      <div class="hero-slide" style="background-image: url('src/slide\ show/Y 15 phone.png');">
+        <h1>Premium Smartphones</h1>
+        <button onclick="window.location.href='#products'">Explore</button>
+      </div>
+      <div class="hero-slide" style="background-image: url('src/slide\ show/m Earbuds.png');">
+        <h1>Best Deals Available</h1>
+        <button onclick="window.location.href='#products'">Shop Now</button>
+      </div>
+
+      <button class="slideshow-nav prev" onclick="changeSlide(-1)">&#10094;</button>
+      <button class="slideshow-nav next" onclick="changeSlide(1)">&#10095;</button>
+
+      <div class="slide-indicators">
+        <span class="slide-indicator active" onclick="currentSlide(1)"></span>
+        <span class="slide-indicator" onclick="currentSlide(2)"></span>
+        <span class="slide-indicator" onclick="currentSlide(3)"></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="featured-products">
+    <h2>Featured Products</h2>
+    <div class="product-grid">
+      <div class="product-card">
+        <img src="src/phone imges/x phone.jpeg" alt="Smartphone 1">
+        <h3>Smartphone X</h3>
+        <p> ₹10,000</p>
+        </p>
+        <button onclick="addToCart('Smartphone X')">Add to Cart</button>
+      </div>
+      <div class="product-card">
+        <img src="src/phone imges/Y phone.png" alt="Smartphone 2">
+        <h3>Smartphone Y</h3>
+        <p>₹15,000</p>
+        <button onclick="addToCart('Smartphone Y')">Add to Cart</button>
+      </div>
+      <div class="product-card">
+        <img src="src/phone imges/J Earbud.png" alt="Accessory 1">
+        <h3>Wireless Earbuds</h3>
+        <p>₹699</p>
+        <button onclick="addToCart('Wireless Earbuds')">Add to Cart</button>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Mobile Shop. All rights reserved.</p>
+  </footer>
+
+  <script>
+    function addToCart(productName) {
+      alert(`${productName} added to cart!`);
+      // Future implementation: Add to localStorage or send to backend
+    }
+
+    // Slideshow functionality
+    let currentSlideIndex = 0;
+    const slides = document.getElementsByClassName("hero-slide");
+    const indicators = document.getElementsByClassName("slide-indicator");
+
+    function showSlide(index) {
+      // Reset all slides
+      for (let i = 0; i < slides.length; i++) {
+        slides[i].classList.remove("active");
+        indicators[i].classList.remove("active");
+      }
+
+      // Show current slide
+      if (index >= slides.length) {
+        currentSlideIndex = 0;
+      } else if (index < 0) {
+        currentSlideIndex = slides.length - 1;
+      } else {
+        currentSlideIndex = index;
+      }
+
+      slides[currentSlideIndex].classList.add("active");
+      indicators[currentSlideIndex].classList.add("active");
+    }
+
+    function changeSlide(direction) {
+      showSlide(currentSlideIndex + direction);
+    }
+
+    function currentSlide(index) {
+      showSlide(index - 1);
+    }
+
+    // Auto-advance slideshow
+    setInterval(function () {
+      changeSlide(1);
+    }, 5000); // Change slide every 5 seconds
+
+    // Initialize slideshow
+    showSlide(0);
+
+    // Auth State Management
+    function updateAuthUI() {
+      const userId = localStorage.getItem('userId');
+      const username = localStorage.getItem('username');
+      const authLink = document.getElementById('authLink');
+
+      if (userId) {
+        authLink.innerHTML = `<a href="#" onclick="logout()">Logout (${username})</a>`;
+      } else {
+        authLink.innerHTML = `<a href="loginpage.html">Login</a>`;
+      }
+    }
+
+    function logout() {
+      localStorage.clear();
+      updateAuthUI();
+      window.location.href = 'loginpage.html';
+    }
+
+    // Run on load
+    document.addEventListener('DOMContentLoaded', updateAuthUI);
+  </script>
+</body>
+
+</html>

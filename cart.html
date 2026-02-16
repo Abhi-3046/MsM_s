@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Shopping Cart - Mobile Shop</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --primary-color: #373440;
+      --secondary-color: #6c757d;
+      --accent-color: #3b82f6;
+      --success-color: #25a244;
+      --danger-color: #ef4444;
+      --background-color: #f8f9fa;
+      --card-bg: #ffffff;
+      --text-color: #333333;
+      --border-color: #e5e7eb;
+    }
+
+    body {
+      background-color: var(--background-color);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navbar {
+      background-color: var(--primary-color);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .navbar .logo a {
+      text-decoration: none;
+      color: white;
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar ul li a {
+      color: white;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: opacity 0.2s;
+    }
+
+    .navbar ul li a:hover {
+      opacity: 0.8;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      flex: 1;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      margin-bottom: 2rem;
+      color: var(--primary-color);
+    }
+
+    .cart-layout {
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .cart-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .cart-items {
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+
+    .item-details {
+      flex: 1;
+    }
+
+    .item-name {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .item-price {
+      color: var(--secondary-color);
+    }
+
+    .item-controls {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .item-quantity {
+      font-weight: 500;
+      background: #f3f4f6;
+      padding: 0.25rem 0.75rem;
+      border-radius: 6px;
+    }
+
+    .remove-btn {
+      color: var(--danger-color);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      padding: 0.5rem;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+
+    .remove-btn:hover {
+      background: #fee2e2;
+    }
+
+    .order-summary {
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+      height: fit-content;
+      position: sticky;
+      top: 100px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      color: var(--secondary-color);
+    }
+
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px dashed var(--border-color);
+      font-weight: bold;
+      font-size: 1.25rem;
+      color: var(--primary-color);
+    }
+
+    .checkout-btn {
+      width: 100%;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 1rem;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1.5rem;
+      transition: background-color 0.2s;
+    }
+
+    .checkout-btn:hover {
+      background-color: #2a2830;
+    }
+
+    .empty-cart {
+      text-align: center;
+      padding: 4rem 1rem;
+    }
+
+    .empty-cart h2 {
+      color: var(--secondary-color);
+      margin-bottom: 1.5rem;
+    }
+
+    .continue-btn {
+      display: inline-block;
+      background-color: var(--accent-color);
+      color: white;
+      text-decoration: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      transition: background-color 0.2s;
+    }
+
+    .continue-btn:hover {
+      background-color: #2563eb;
+    }
+
+    /* Modal for Payment */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      backdrop-filter: blur(2px);
+    }
+
+    .modal {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal h2 {
+      margin-top: 0;
+      text-align: center;
+    }
+
+    .modal input {
+      width: 100%;
+      padding: 0.75rem;
+      margin: 1rem 0;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .modal-btn {
+      flex: 1;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .btn-primary {
+      background: var(--success-color);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: var(--secondary-color);
+      color: white;
+    }
+
+    .success-msg {
+      color: var(--success-color);
+      text-align: center;
+      display: none;
+      margin-top: 1rem;
+    }
+
+    footer {
+      background-color: var(--primary-color);
+      color: white;
+      text-align: center;
+      padding: 1.5rem;
+      margin-top: auto;
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <div class="logo">
+      <a href="index.html" aria-label="Home page"><img src="src/logo/dora.png" alt="Logo"
+          style="height:32px;vertical-align:middle;margin-right:8px;">
+        Dora </a>
+    </div>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="product.html">Products</a></li>
+      <li><a href="cart.html" style="font-weight: bold; border-bottom: 2px solid white;">Cart</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li id="authLink"><a href="loginpage.html">Login</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <h1>Your Shopping Cart</h1>
+
+    <div id="cartContent" style="display: none;">
+      <div class="cart-layout">
+        <div class="cart-items" id="cartList">
+          <!-- Items will be injected here -->
+        </div>
+
+        <div class="order-summary">
+          <h3>Order Summary</h3>
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span id="summarySubtotal">₹0.00</span>
+          </div>
+          <div class="summary-row">
+            <span>Shipping</span>
+            <span>Free</span>
+          </div>
+          <div class="summary-total">
+            <span>Total</span>
+            <span id="summaryTotal">₹0.00</span>
+          </div>
+          <button class="checkout-btn" onclick="showPaymentModal()">Proceed to Checkout</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="emptyCart" class="empty-cart" style="display: none;">
+      <h2>Your cart is currently empty.</h2>
+      <a href="product.html" class="continue-btn">Start Shopping</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Mobile Shop. All rights reserved.</p>
+  </footer>
+
+  <!-- Payment Modal -->
+  <div class="modal-overlay" id="paymentModal">
+    <div class="modal">
+      <h2>Pay with UPI</h2>
+      <p style="text-align: center; color: #666; margin-bottom: 1rem;">Total to pay: <span id="modalTotal"
+          style="font-weight: bold; color: #333;"></span></p>
+
+      <input type="text" id="upiId" placeholder="Enter UPI ID (e.g. name@upi)" />
+
+      <div id="paymentStatus" class="success-msg"></div>
+
+      <div class="modal-actions">
+        <button class="modal-btn btn-secondary" onclick="closePaymentModal()">Cancel</button>
+        <button class="modal-btn btn-primary" onclick="processPayment()">Pay Now</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE_URL = 'http://localhost:5000';
+    let cart = [];
+    const userId = localStorage.getItem('userId');
+    const username = localStorage.getItem('username');
+
+    // Auth Check
+    function checkAuth() {
+      const authLink = document.getElementById('authLink');
+      if (userId) {
+        authLink.innerHTML = `<a href="#" onclick="logout()">Logout (${username})</a>`;
+      } else {
+        window.location.href = 'loginpage.html';
+      }
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = 'loginpage.html';
+    }
+
+    // Load Cart
+    async function loadCart() {
+      if (!userId) return;
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/cart/${userId}`);
+        const data = await response.json();
+
+        cart = data;
+        renderCart();
+      } catch (error) {
+        console.error('Error loading cart:', error);
+        alert('Could not load cart items. Please check your connection.');
+      }
+    }
+
+    function renderCart() {
+      const cartContent = document.getElementById('cartContent');
+      const emptyCart = document.getElementById('emptyCart');
+      const cartList = document.getElementById('cartList');
+
+      if (!cart || cart.length === 0) {
+        cartContent.style.display = 'none';
+        emptyCart.style.display = 'block';
+        return;
+      }
+
+      cartContent.style.display = 'block';
+      emptyCart.style.display = 'none';
+
+      let total = 0;
+      cartList.innerHTML = cart.map(item => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+        return `
+          <div class="cart-item">
+            <div class="item-details">
+              <div class="item-name">${item.name}</div>
+              <div class="item-price">₹${item.price.toFixed(2)}</div>
+            </div>
+            <div class="item-controls">
+              <span class="item-quantity">Qty: ${item.quantity}</span>
+              <button class="remove-btn" onclick="removeItem(${item.cart_id})">Remove</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('summarySubtotal').textContent = `₹${total.toFixed(2)}`;
+      document.getElementById('summaryTotal').textContent = `₹${total.toFixed(2)}`;
+      document.getElementById('modalTotal').textContent = `₹${total.toFixed(2)}`;
+    }
+
+    async function removeItem(cartId) {
+      if (!confirm('Are you sure you want to remove this item?')) return;
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/cart/${cartId}`, {
+          method: 'DELETE'
+        });
+
+        if (response.ok) {
+          await loadCart();
+        } else {
+          alert('Failed to remove item.');
+        }
+      } catch (error) {
+        console.error('Error removing item:', error);
+        // Optimistic UI update fallback
+        cart = cart.filter(item => item.cart_id !== cartId);
+        renderCart();
+      }
+    }
+
+    // Payment Logic
+    function showPaymentModal() {
+      document.getElementById('paymentModal').style.display = 'flex';
+      document.getElementById('upiId').value = '';
+      document.getElementById('paymentStatus').style.display = 'none';
+      document.getElementById('paymentStatus').textContent = '';
+    }
+
+    function closePaymentModal() {
+      document.getElementById('paymentModal').style.display = 'none';
+    }
+
+    async function processPayment() {
+      const upiId = document.getElementById('upiId').value.trim();
+      if (!upiId || !upiId.includes('@')) {
+        alert('Please enter a valid UPI ID');
+        return;
+      }
+
+      const statusDiv = document.getElementById('paymentStatus');
+      statusDiv.style.display = 'block';
+      statusDiv.style.color = '#3b82f6';
+      statusDiv.textContent = 'Processing payment...';
+
+      try {
+        // 1. Create Order
+        const orderRes = await fetch(`${API_BASE_URL}/order`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: parseInt(userId) })
+        });
+
+        const orderData = await orderRes.json();
+
+        if (!orderRes.ok) {
+          throw new Error(orderData.message || 'Order creation failed');
+        }
+
+        // 2. Process Payment
+        const payRes = await fetch(`${API_BASE_URL}/payment`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            order_id: orderData.order_id,
+            method: 'UPI'
+          })
+        });
+
+        const payData = await payRes.json();
+
+        if (payRes.ok) {
+          statusDiv.style.color = '#25a244';
+          statusDiv.textContent = 'Payment Successful! Redirecting...';
+
+          setTimeout(() => {
+            closePaymentModal();
+            cart = [];
+            renderCart();
+            alert('Order placed successfully!');
+          }, 2000);
+        } else {
+          throw new Error(payData.message || 'Payment failed');
+        }
+
+      } catch (error) {
+        console.error('Payment Error:', error);
+        statusDiv.style.color = '#ef4444';
+        statusDiv.textContent = 'Error: ' + error.message;
+      }
+    }
+
+    // Initialize
+    checkAuth();
+    loadCart();
+  </script>
+</body>
+
+</html>

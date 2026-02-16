@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details - Mobile Shop</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f8f9fa;
+      color: #333;
+    }
+
+    .navbar {
+      background-color: #373440;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .navbar .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar .logo a {
+      text-decoration: none;
+      color: white;
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar .logo img {
+      height: 32px;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .navbar ul li a {
+      color: white;
+      text-decoration: none;
+      font-size: 1rem;
+    }
+
+    .navbar ul li a:hover {
+      text-decoration: underline;
+    }
+
+    .product-container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-image-card {
+      position: relative;
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .product-image-card img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    .badge {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: #25a244;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    .product-details {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .product-title {
+      font-size: 2rem;
+      color: #373440;
+      margin-bottom: 0.5rem;
+    }
+
+    .price-box {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .current-price {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #25a244;
+    }
+
+    .old-price {
+      font-size: 1.2rem;
+      color: #6c757d;
+      text-decoration: line-through;
+    }
+
+    .discount {
+      background: #ff6b6b;
+      color: white;
+      padding: 0.3rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      font-weight: bold;
+    }
+
+    .product-description {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: #6c757d;
+    }
+
+    .quantity-box {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .quantity-box button {
+      width: 40px;
+      height: 40px;
+      border: 2px solid #373440;
+      background: white;
+      color: #373440;
+      font-size: 1.5rem;
+      cursor: pointer;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+    }
+
+    .quantity-box button:hover {
+      background: #373440;
+      color: white;
+    }
+
+    .quantity-box input {
+      width: 80px;
+      padding: 0.5rem;
+      border: 2px solid #373440;
+      border-radius: 4px;
+      text-align: center;
+      font-size: 1.1rem;
+    }
+
+    .add-to-cart {
+      padding: 1rem 2rem;
+      background: #373440;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin-top: 1rem;
+    }
+
+    .add-to-cart:hover {
+      background: #6c757d;
+    }
+
+    .features {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #eee;
+    }
+
+    .features div {
+      font-size: 1rem;
+      color: #373440;
+    }
+
+    @media (max-width: 768px) {
+      .product-container {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .navbar ul {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="logo">
+      <a href="index.html" aria-label="Home page"><img src="src/logo/dora.png" alt="Logo"
+          style="height:32px;vertical-align:middle;margin-right:8px;">
+        Dora </a>
+    </div>
+    <ul>
+      <li><a href="index.html" aria-label="Home page">Home</a></li>
+      <li><a href="product.html" aria-label="Products page">Products</a></li>
+      <li><a href="cart.html" aria-label="Shopping cart">Cart</a></li>
+      <li><a href="contact.html" aria-label="Contact page">Contact</a></li>
+      <li id="authLink"><a href="loginpage.html" aria-label="Login page">Login</a></li>
+    </ul>
+  </nav>
+
+  <div class="product-container">
+    <!-- Left: Image -->
+    <div class="product-image-card">
+      <img id="mainProductImage" src="src/phone imges/x phone.jpeg" alt="Product Image"
+        onerror="this.src='src/phone imges/x phone.jpeg'">
+      <span class="badge">New</span>
+    </div>
+
+    <!-- Right: Details -->
+    <div class="product-details">
+      <h1 class="product-title" id="productTitle">Smartphone X</h1>
+
+      <div class="price-box">
+        <span class="current-price" id="currentPrice">₹10,000</span>
+        <span class="old-price" id="oldPrice">₹12,000</span>
+        <span class="discount" id="discount">20% OFF</span>
+      </div>
+
+      <p class="product-description" id="productDescription">
+        Powerful performance, stunning display, and long-lasting battery.
+        Designed for speed and style.
+      </p>
+
+      <!-- Quantity -->
+      <div class="quantity-box">
+        <button onclick="changeQty(-1)">−</button>
+        <input type="number" id="quantity" value="1" min="1" onchange="validateQuantity()">
+        <button onclick="changeQty(1)">+</button>
+      </div>
+
+      <!-- CTA -->
+      <button class="add-to-cart" onclick="addToCart()">Add to Cart</button>
+
+      <!-- Trust Section -->
+      <div class="features">
+        <div>✔ 1 Year Warranty</div>
+        <div>✔ Secure Payment</div>
+        <div>✔ Easy Returns</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE_URL = 'http://localhost:5000';
+    let currentUserId = localStorage.getItem('userId') || null;
+    let currentProduct = null;
+
+    // Load product details from URL or default
+    async function loadProduct() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const productId = urlParams.get('id');
+
+      if (productId) {
+        try {
+          const response = await fetch(`${API_BASE_URL}/products`);
+          const products = await response.json();
+          const product = products.find(p => p.product_id == productId);
+
+          if (product) {
+            currentProduct = product;
+            displayProduct(product);
+          }
+        } catch (error) {
+          console.error('Error loading product:', error);
+        }
+      }
+    }
+
+    function displayProduct(product) {
+      document.getElementById('productTitle').textContent = product.name;
+      document.getElementById('currentPrice').textContent = `₹${product.price}`;
+      document.getElementById('productDescription').textContent = product.description || 'Powerful performance, stunning display, and long-lasting battery. Designed for speed and style.';
+
+      if (product.image) {
+        document.getElementById('mainProductImage').src = product.image;
+      }
+
+      // Calculate discount if old price exists
+      if (product.old_price && product.old_price > product.price) {
+        const discountPercent = Math.round(((product.old_price - product.price) / product.old_price) * 100);
+        document.getElementById('oldPrice').textContent = `₹${product.old_price}`;
+        document.getElementById('discount').textContent = `${discountPercent}% OFF`;
+      } else {
+        document.getElementById('oldPrice').style.display = 'none';
+        document.getElementById('discount').style.display = 'none';
+      }
+    }
+
+    function changeQty(change) {
+      const quantityInput = document.getElementById('quantity');
+      let currentQty = parseInt(quantityInput.value) || 1;
+      currentQty += change;
+
+      if (currentQty < 1) {
+        currentQty = 1;
+      }
+
+      quantityInput.value = currentQty;
+    }
+
+    function validateQuantity() {
+      const quantityInput = document.getElementById('quantity');
+      let qty = parseInt(quantityInput.value) || 1;
+
+      if (qty < 1) {
+        qty = 1;
+      }
+
+      quantityInput.value = qty;
+    }
+
+    async function addToCart() {
+      if (!currentUserId) {
+        alert('Please login first to add items to cart!');
+        window.location.href = 'loginpage.html';
+        return;
+      }
+
+      if (!currentProduct) {
+        // Use default product if no product loaded
+        alert('Product information not available. Please select a product from the home page.');
+        return;
+      }
+
+      const quantity = parseInt(document.getElementById('quantity').value) || 1;
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/cart/add`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            user_id: parseInt(currentUserId),
+            product_id: currentProduct.product_id,
+            quantity: quantity
+          })
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          alert('Product added to cart!');
+          window.location.href = 'cart.html';
+        } else {
+          alert('Error adding to cart: ' + (result.message || 'Unknown error'));
+        }
+      } catch (error) {
+        console.error('Error adding to cart:', error);
+        alert('Error connecting to server. Please try again.');
+      }
+    }
+
+    // Load product when page loads
+    window.addEventListener('DOMContentLoaded', () => {
+      loadProduct();
+      updateAuthUI();
+    });
+
+    // Auth State Management
+    function updateAuthUI() {
+      const authLink = document.getElementById('authLink');
+      const username = localStorage.getItem('username');
+
+      if (currentUserId) {
+        authLink.innerHTML = `<a href="#" onclick="logout()">Logout (${username})</a>`;
+      } else {
+        authLink.innerHTML = `<a href="loginpage.html">Login</a>`;
+      }
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = 'loginpage.html';
+    }
+  </script>
+</body>
+
+</html>

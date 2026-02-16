@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Mobile Shop</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background: #f8f9fa;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login-container {
+      background: #fff;
+      padding: 2rem 2.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      width: 350px;
+      max-width: 90vw;
+    }
+
+    .login-container h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #373440;
+    }
+
+    .tab-group {
+      display: flex;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 0.75rem 0;
+      cursor: pointer;
+      color: #6c757d;
+      font-weight: bold;
+      border-bottom: 2px solid transparent;
+      transition: color 0.2s, border-bottom 0.2s;
+    }
+
+    .tab.active {
+      color: #373440;
+      border-bottom: 2px solid #373440;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.3rem;
+      color: #333;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.7rem;
+      background: #373440;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+
+    button:hover {
+      background: #6c757d;
+    }
+
+    .error {
+      color: #d9534f;
+      text-align: center;
+      margin-bottom: 1rem;
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="login-container">
+    <h2>Login</h2>
+    <div class="tab-group">
+      <div class="tab active" id="customerTab" onclick="showForm('customer')">Customer</div>
+      <div class="tab" id="employeeTab" onclick="showForm('employee')">Employee</div>
+    </div>
+    <div id="errorMsg" class="error"></div>
+    <form id="customerForm" onsubmit="return handleLogin(event, 'customer')">
+      <div class="form-group">
+        <label for="customerUsername">Username</label>
+        <input type="text" id="customerUsername" required>
+      </div>
+      <div class="form-group">
+        <label for="customerPassword">Password</label>
+        <input type="password" id="customerPassword" required>
+      </div>
+      <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+        <input type="checkbox" id="showCustomerPass" onclick="togglePassword('customerPassword')"
+          style="width: auto; margin-right: 5px;">
+        <label for="showCustomerPass" style="margin: 0; cursor: pointer;">Show Password</label>
+      </div>
+      <button type="submit">Login as Customer</button>
+    </form>
+    <form id="employeeForm" style="display:none;" onsubmit="return handleLogin(event, 'employee')">
+      <div class="form-group">
+        <label for="employeeUsername">Employee ID</label>
+        <input type="text" id="employeeUsername" required>
+      </div>
+      <div class="form-group">
+        <label for="employeePassword">Password</label>
+        <input type="password" id="employeePassword" required>
+      </div>
+      <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+        <input type="checkbox" id="showEmployeePass" onclick="togglePassword('employeePassword')"
+          style="width: auto; margin-right: 5px;">
+        <label for="showEmployeePass" style="margin: 0; cursor: pointer;">Show Password</label>
+      </div>
+      <button type="submit">Login as Employee</button>
+    </form>
+    <div style="text-align: center; margin-top: 1rem;">
+      <a href="signup.html" style="color: #373440; text-decoration: none; font-size: 0.9rem;">Don't have an account?
+        Sign Up</a>
+    </div>
+  </div>
+  <script>
+    const API_BASE_URL = 'http://localhost:5000';
+
+    function showForm(type) {
+      document.getElementById('customerForm').style.display = type === 'customer' ? 'block' : 'none';
+      document.getElementById('employeeForm').style.display = type === 'employee' ? 'block' : 'none';
+      document.getElementById('customerTab').classList.toggle('active', type === 'customer');
+      document.getElementById('employeeTab').classList.toggle('active', type === 'employee');
+      document.getElementById('errorMsg').style.display = 'none';
+    }
+
+    function togglePassword(fieldId) {
+      const field = document.getElementById(fieldId);
+      field.type = field.type === "password" ? "text" : "password";
+    }
+
+    async function handleLogin(event, type) {
+      event.preventDefault();
+      let username, password;
+
+      if (type === 'customer') {
+        username = document.getElementById('customerUsername').value;
+        password = document.getElementById('customerPassword').value;
+      } else {
+        username = document.getElementById('employeeUsername').value;
+        password = document.getElementById('employeePassword').value;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            username: username,
+            password: password
+          })
+        });
+
+        if (!response.ok) {
+          // Try to get error message from response
+          let errorData;
+          try {
+            errorData = await response.json();
+          } catch (e) {
+            errorData = { message: `Server error: ${response.status}` };
+          }
+          showError(errorData.message || "Invalid credentials. Please try again.");
+          return false;
+        }
+
+        const result = await response.json();
+
+        if (result.success && result.user) {
+          // Store user info in localStorage
+          localStorage.setItem('userId', result.user.user_id || result.user.id);
+          localStorage.setItem('username', result.user.username);
+          localStorage.setItem('userType', type);
+
+          alert(`${type === 'customer' ? 'Customer' : 'Employee'} login successful!`);
+          window.location.href = "index.html";
+        } else {
+          showError(result.message || "Invalid credentials. Please try again.");
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        if (error.name === 'TypeError' && error.message.includes('fetch')) {
+          showError("Cannot connect to server. Please make sure the backend server is running on http://localhost:5000");
+        } else {
+          showError("Error connecting to server. Please try again.");
+        }
+      }
+
+      return false;
+    }
+
+    function showError(msg) {
+      const errorDiv = document.getElementById('errorMsg');
+      errorDiv.textContent = msg;
+      errorDiv.style.display = 'block';
+    }
+  </script>
+</body>
+
+</html>
